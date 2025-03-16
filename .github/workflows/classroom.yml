@@ -29,7 +29,7 @@ jobs:
             pip install -r requirements.txt
           max-score: 100
           test-path: 'answer/test_exercises.py'
-      - name: Autograding complete
+      - name: Autograding Reporter
         uses: fuisl/autograding-grading-reporter@v1
         env:
           NUMPY_RESULTS: "${{steps.numpy.outputs.result}}"
