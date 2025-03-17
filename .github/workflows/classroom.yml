@@ -21,38 +21,47 @@ jobs:
           vega: false
       
       - name: Get pip cache dir
-        id: pip-cache
+        id: pip-cache-dir
         shell: bash
         run: |
           echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+
       - name: pip cache
+        id: pip-cache
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pip-cache.outputs.dir }}
+          path: ${{ steps.pip-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-
-      - name: Update pip cache permissions
-        run: |
-          sudo -H chown -R $(whoami) $HOME/.cache/pip
             
       - name: Install dependencies
         if: steps.pip-cache.outputs.cache-hit != 'true'
         run: |
             pip install -r requirements.txt
+      
+      - name: Permission grant
+        run: sudo -H chown -R $(whoami) $HOME/.cache/pip
+
+      - name: Set up Python virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --cache-dir ${{ steps.pip-cache-dir.outputs.dir }} -r requirements.txt
+
       - name: Export Python file
         run: |
           jupyter nbconvert --to python exercises.ipynb
+
       - name: Checkout tests
         run: git clone https://github.com/nhientruong04/test_action.git answer
       - name: Autograding
         env:
-          PIP_CACHE_DIR: ${{ steps.pip-cache.outputs.dir }}
+          PIP_CACHE_DIR: ${{ steps.pip-cache-dir.outputs.dir }}
         id: numpy
         uses: FAU-CS6-KDDmUe-Submissions/Custom-Python-Autograder@v1
         with:
-          setup-command: 'pip install -r requirements.txt'
+          setup-command: 'source venv/bin/activate && pip install --cache-dir $PIP_CACHE_DIR -r requirements.txt'
           max-score: 100
           test-path: 'answer/test_exercises.py'
       - name: Autograding Reporter
