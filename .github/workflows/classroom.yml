@@ -43,8 +43,7 @@ jobs:
       - name: Install Jupyter
         run: |
           pip install --cache-dir ${{ steps.pip-cache-dir.outputs.dir }} jupyter
-          
-          
+
       - name: Export Python file
         run: |
           jupyter nbconvert --to python exercises.ipynb
@@ -59,7 +58,7 @@ jobs:
         env:
           PIP_CACHE_DIR: ${{ steps.pip-cache-dir.outputs.dir }}
         id: numpy
-        uses: FAU-CS6-KDDmUe-Submissions/Custom-Python-Autograder@v1W
+        uses: FAU-CS6-KDDmUe-Submissions/Custom-Python-Autograder@v1
         with:
           setup-command: 'pip install --cache-dir $PIP_CACHE_DIR -r requirements.txt'
           max-score: 100
