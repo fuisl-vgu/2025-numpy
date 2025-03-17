@@ -41,9 +41,12 @@ jobs:
       - name: Checkout tests
         run: git clone https://github.com/nhientruong04/test_action.git answer
       - name: Autograding
+        env:
+          PIP_CACHE_DIR: ${{ steps.pip-cache.outputs.dir }}
         id: numpy
         uses: FAU-CS6-KDDmUe-Submissions/Custom-Python-Autograder@v1
         with:
+          setup-command: 'pip install -r requirements.txt'
           max-score: 100
           test-path: 'answer/test_exercises.py'
       - name: Autograding Reporter
