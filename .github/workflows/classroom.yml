@@ -5,7 +5,7 @@ name: Autograding Tests
 permissions:
   checks: write
   actions: read
-  contents: read
+  contents: write
 jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
@@ -13,6 +13,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up comment bot
+        uses: iterative/setup-cml@v2
+        with:
+          version: 'v0.20.0'
+          vega: false
       
       - name: Get pip cache dir
         id: pip-cache
@@ -55,3 +61,13 @@ jobs:
           NUMPY_RESULTS: "${{steps.numpy.outputs.result}}"
         with:
           runners: numpy
+    
+      - name: Comment bot
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f comment.md ]; then
+            cml comment create comment.md
+          else
+            echo "comment.md not found!"
+          fi
