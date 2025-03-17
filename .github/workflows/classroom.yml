@@ -47,7 +47,7 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install --cache-dir ${{ steps.pip-cache-dir.outputs.dir }} -r requirements.txt
+          pip install --cache-dir ${{ steps.pip-cache-dir.outputs.dir }} jupyter
 
       - name: Export Python file
         run: |
