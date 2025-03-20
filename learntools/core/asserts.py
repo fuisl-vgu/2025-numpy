@@ -73,7 +73,7 @@ def assert_equal(actual, expected, name, failure_factory=None):
         if actual.dtype == np.float_:
             check = np.all(np.abs(actual-expected) < 1e-5)
         else:
-            check = np.equals(actual, expected)
+            check = np.array_equal(actual, expected)
     else:
         check = actual == expected
     if failure_factory:
