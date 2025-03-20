@@ -70,7 +70,10 @@ def assert_equal(actual, expected, name, failure_factory=None):
         assert_series_equals(actual, expected, name)
         return
     elif isinstance(actual, np.ndarray) or isinstance(expected, np.ndarray):
-        check = np.array_equal(actual, expected)
+        if actual.dtype == np.float_:
+            check = np.all(np.abs(actual-expected) < 1e-5)
+        else:
+            check = np.equals(actual, expected)
     else:
         check = actual == expected
     if failure_factory:

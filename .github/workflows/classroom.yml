@@ -36,12 +36,7 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-            
-      # - name: Install dependencies
-      #   if: steps.pip-cache.outputs.cache-hit != 'true'
-      #   run: |
-      #       pip install -r requirements.txt
-      
+
       - name: Install Jupyter
         run: |
           pip install --cache-dir ${{ steps.pip-cache-dir.outputs.dir }} jupyter
@@ -64,7 +59,7 @@ jobs:
         with:
           setup-command: 'pip install --cache-dir $PIP_CACHE_DIR -r requirements.txt'
           max-score: 100
-          test-path: 'answer/test_exercises.py'
+          test-path: 'answer/test_numpy.py'
       - name: Autograding Reporter
         uses: fuisl/autograding-grading-reporter@v1
         env:
